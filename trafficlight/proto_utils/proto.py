@@ -110,10 +110,17 @@ class Message:
             return None
 
     def decode_blackbox(self) -> dict:
-        decoded = self.decode_b64()
-
-        value, typedef = decode_message(decoded)
-        return _json_safe_transform(values=value, typedef=typedef, toBytes=False)
+        try:
+            decoded = self.decode_b64()
+            value, typedef = decode_message(decoded)
+            return _json_safe_transform(values=value, typedef=typedef, toBytes=False)
+        except Exception as e:
+            print(f"error decoding blackbox for {self.name}: {e}")
+            return {
+                "error": f"Blackbox decode failed: {e}",
+                "raw_b64": self._raw if isinstance(self._raw, str) else "",
+                "raw_hex": self._raw.hex() if isinstance(self._raw, bytes) else "",
+            }
 
     def to_string(self, one_line: bool = True) -> str:
         if self.payload is None:

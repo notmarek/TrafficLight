@@ -15,7 +15,12 @@ output = get_output(config.output)
 class TrafficReceiver:
     @staticmethod
     async def process_data(data: RequestModel):
-        processed_protos = [Proto.from_raw(data.rpcid, p) for p in data.protos]
+        processed_protos = []
+        for p in data.protos:
+            try:
+                processed_protos.append(Proto.from_raw(data.rpcid, p))
+            except Exception as e:
+                print(f"error processing proto (method={p.method}): {e}")
         await output.add_record(rpc_id=data.rpcid, rpc_status=data.rpcstatus, protos=processed_protos, rpc_handle=data.rpchandle)
 
     @staticmethod
@@ -53,6 +58,8 @@ server = t.get_app()
 
 async def main():
     await output.start()
+    if hasattr(output, "setup_routes"):
+        output.setup_routes(server)
     asyncio.create_task(web._run_app(server, host=config.host, port=config.port, print=lambda _: _))
     await asyncio.Event().wait()
 

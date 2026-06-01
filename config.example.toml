@@ -1,11 +1,12 @@
 host = "0.0.0.0"
 port = 3335
-# Host and Port for the Receiver
+# Host and Port for the Receiver and web-ui
 
-output = "ui/print/discord"
+output = "ui/print/discord/web"
 # ui      = cool interactive ui
 # print   = simple log
 # discord = discord webhooks
+# web     = web-based ui (browser)
 
 webhook = ""
 # your webhook url in case you set "discord" for output

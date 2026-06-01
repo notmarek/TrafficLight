@@ -11,6 +11,7 @@ class Output(Enum):
     UI = "ui"
     PRINT = "print"
     DISCORD = "discord"
+    WEB = "web"
 
 
 class Config(BaseModel):
